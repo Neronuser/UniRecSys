@@ -3,3 +3,4 @@ Flask-pymongo
 Flask-mogorest
 Flask-mongoengine
 Flask-bcrypt
+numpy
