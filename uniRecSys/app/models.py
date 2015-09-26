@@ -4,7 +4,6 @@ from flask.ext.mongorest.resources import Resource
 
 class User(db.Document):
     email = db.EmailField(unique=True, required=True)
-    login = db.StringField(unique=True, max_length=20)
     password = db.StringField(max_length=30)
 
 
