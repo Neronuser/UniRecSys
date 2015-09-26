@@ -20,15 +20,19 @@ class UniRecSysTestCase(unittest.TestCase):
     def test_users(self):
         resp = self.c.post('/users/', data=json.dumps({
             "email": "12341@dot.net",
-            "login": "1234",
             "password": "toor"
         }))
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.data)["login"], "1234")
+        self.assertEqual(json.loads(resp.data)["email"], "12341@dot.net")
 
         resp = self.c.get('/users/')
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(len(json.loads(resp.data)['data']) > 0)
+
+        resp = self.c.post('/login/', data=json.dumps({
+            "email": "12341@dot.net",
+            "password": "toor"
+        }))
 
     def test_hello_world(self):
         resp = self.c.get('/')
