@@ -35,15 +35,15 @@ def login():
     if request.method == 'POST':
         try:
             this_user = User.objects.get(email=request.form['email'])
-            if request.form['email'] != this_user.email:
-                error = 'Invalid username'
-            elif not bcrypt.check_password_hash(this_user.password, request.form['password']):
+            if not bcrypt.check_password_hash(this_user.password, request.form['password']):
                 error = 'Invalid password'
             else:
                 session['logged_in'] = True
                 session['this_user'] = {'email': this_user.email}
                 flash('You were logged in')
+                # TODO: right redirect and test
                 return redirect(url_for('index'))
         except:
+            error = "User does not exist"
             flash('User does not exist')
     return render_template('login.html', error=error)

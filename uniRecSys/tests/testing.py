@@ -29,10 +29,14 @@ class UniRecSysTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(len(json.loads(resp.data)['data']) > 0)
 
-        resp = self.c.post('/login/', data=json.dumps({
+        headers = {'Content-type': 'application/x-www-form-urlencoded'}
+        resp = self.c.post('/login', data={
             "email": "12341@dot.net",
             "password": "toor"
-        }))
+        }, headers=headers)
+        print(resp.data)
+        print(json.loads(resp.data))
+
 
     def test_hello_world(self):
         resp = self.c.get('/')
