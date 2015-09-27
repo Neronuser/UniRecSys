@@ -1,6 +1,8 @@
-from uniRecSys.app import app as app2
+from uniRecSys.app import bcrypt, app as app2
+from uniRecSys.app.models import User, Item, Score
 import json
 import unittest
+import numpy as np
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 
 
@@ -13,29 +15,40 @@ class UniRecSysTestCase(unittest.TestCase):
         self.app.session_interface = MongoEngineSessionInterface(db)
         self.db = db
         self.c = self.app.test_client()
+        for i in range(50):
+            User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
+            Item(name=str(i), description="bla").save()
+        users = User.objects().all()
+        items = Item.objects().all()
+        for i in range(100):
+            Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 50)].id,
+                  item=items[np.random.randint(0, 50)].id)
 
     def tearDown(self):
         self.db.connection.drop_database("testing")
 
     def test_users(self):
-        resp = self.c.post('/users/', data=json.dumps({
+        user1 = self.c.post('/users/', data=json.dumps({
             "email": "12341@dot.net",
             "password": "toor"
         }))
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.data)["email"], "12341@dot.net")
+        self.assertEqual(user1.status_code, 200)
+        self.assertEqual(json.loads(user1.data)["email"], "12341@dot.net")
 
         resp = self.c.get('/users/')
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(len(json.loads(resp.data)['data']) > 0)
 
         headers = {'Content-type': 'application/x-www-form-urlencoded'}
-        resp = self.c.post('/login', data={
+        login = self.c.post('/login', data={
             "email": "12341@dot.net",
             "password": "toor"
         }, headers=headers)
-        print(resp.data)
-        print(json.loads(resp.data))
+        # print(resp.data)
+        # print(json.loads(resp.data))
+
+        resp = self.c.get('/recommend')
+
 
 
     def test_hello_world(self):
