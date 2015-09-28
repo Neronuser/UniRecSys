@@ -65,16 +65,16 @@ def recommend():
     user_ids = User.objects().only('id').all()
     item_ids = Item.objects().only('id').all()
     scores = Score.objects().all()
-    user_item = [x for x in itertools.product(user_ids, item_ids)]
-    user_item_score = [(tup, score.score) for tup in user_item for score in scores]
-    this_user_item_score = filter(lambda x: x[0][0] == this_user.id, user_item_score)
+    # user_item = [x for x in itertools.product(user_ids, item_ids)]
+    user_item_score = [((score.user.id, score.item.id), score.score) for score in scores]
+    this_user_item_score = list(filter(lambda x: x[0][0] == this_user.id, user_item_score))
     this_item_score = list(map(lambda x: (x[0][1], x[1]), this_user_item_score))
     this_average_item_score = np.mean(list(map(lambda x: x[1], this_item_score)))
     similarities = []
     for user_id in user_ids:
-        if user_id == this_user.id:
+        if user_id.id == this_user.id:
             continue
-        that_user_item_score = filter(lambda x: x[0][0] == user_id, user_item_score)
+        that_user_item_score = list(filter(lambda x: x[0][0] == user_id.id, user_item_score))
         that_item_score = list(map(lambda x: (x[0][1], x[1]), that_user_item_score))
         this_scores = []
         that_scores = []
@@ -86,21 +86,24 @@ def recommend():
         if len(this_scores) < 5:
             continue
         this_scores = np.array(this_scores)
-        that_scores = np.array(this_scores)
+        that_scores = np.array(that_scores)
         that_user_similarity = (user_id, 1 - distance.cosine(this_scores, that_scores))
         similarities.append(that_user_similarity)
     similarities = sorted(similarities, key=lambda x: x[1], reverse=True)
     top = similarities[:20]
-    top_ids = list(map(lambda x: x[0], similarities))
-    top_user_item_score = filter(lambda x: x[0][0] in top_ids, user_item_score)
+    top_ids = list(map(lambda x: x[0].id, similarities))
+    top_user_item_score = list(filter(lambda x: x[0][0] in top_ids, user_item_score))
     top_user_score = list(map(lambda x: (x[0][0], x[1]), top_user_item_score))
-    top_user_scores = itertools.groupby(top_user_score, lambda x: x[0])
+    top_user_scores = []
+    for k, v in itertools.groupby(top_user_score, lambda x: x[0]):
+        top_user_scores.append((k, list(v)))
+    # TODO: FIX groupby
     top_user_average = [(x[0], np.mean(x[1])) for x in top_user_scores]
     top_average = [x[1] for x in top_user_average]
     top_similarities = [x[1] for x in top]
     k = 1 / np.sum(np.absolute(top_similarities))
     this_items = list(map(lambda x: x[0], this_item_score))
-    unrated_items = filter(lambda x: x in this_items, item_ids)
+    unrated_items = list(filter(lambda x: x in this_items, item_ids))
     ratings = []
     for item in unrated_items:
         top_ten_ratings_i = np.array([x[1] for x in top_user_item_score if x[0][1] == item]) - top_average
@@ -108,6 +111,7 @@ def recommend():
         ratings.append(rating)
     ratings = sorted(ratings, key=lambda x: x[1], reverse=True)
     recommendation = ratings[:10]
+    print(recommendation)
     return recommendation
 
 

@@ -19,10 +19,10 @@ class UniRecSysTestCase(unittest.TestCase):
             User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
             Item(name=str(i), description="bla").save()
         users = User.objects().all()
-        items = Item.objects().all()
-        for i in range(100):
+        self.items = Item.objects().all()
+        for i in range(300):
             Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 50)].id,
-                  item=items[np.random.randint(0, 50)].id)
+                  item=self.items[np.random.randint(0, 50)].id).save()
 
     def tearDown(self):
         self.db.connection.drop_database("testing")
@@ -46,6 +46,10 @@ class UniRecSysTestCase(unittest.TestCase):
         }, headers=headers)
         # print(resp.data)
         # print(json.loads(resp.data))
+
+        for i in range(30):
+            Score(score=np.random.randint(1, 6), user=json.loads(user1.data)['id'],
+                  item=self.items[np.random.randint(0, 50)].id).save()
 
         resp = self.c.get('/recommend')
 
