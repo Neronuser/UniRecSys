@@ -3,8 +3,8 @@ from uniRecSys.app.models import *
 from flask import request, session, flash, redirect, url_for, render_template
 from flask.ext.mongorest.views import ResourceView
 import numpy as np
+from collections import defaultdict
 from scipy.spatial import distance
-import itertools
 from flask.ext.mongorest import operators as ops
 from flask.ext.mongorest import methods
 
@@ -65,7 +65,6 @@ def recommend():
     user_ids = User.objects().only('id').all()
     item_ids = Item.objects().only('id').all()
     scores = Score.objects().all()
-    # user_item = [x for x in itertools.product(user_ids, item_ids)]
     user_item_score = [((score.user.id, score.item.id), score.score) for score in scores]
     this_user_item_score = list(filter(lambda x: x[0][0] == this_user.id, user_item_score))
     this_item_score = list(map(lambda x: (x[0][1], x[1]), this_user_item_score))
@@ -91,23 +90,30 @@ def recommend():
         similarities.append(that_user_similarity)
     similarities = sorted(similarities, key=lambda x: x[1], reverse=True)
     top = similarities[:20]
-    top_ids = list(map(lambda x: x[0].id, similarities))
+    top_ids = list(map(lambda x: x[0].id, top))
     top_user_item_score = list(filter(lambda x: x[0][0] in top_ids, user_item_score))
     top_user_score = list(map(lambda x: (x[0][0], x[1]), top_user_item_score))
-    top_user_scores = []
-    for k, v in itertools.groupby(top_user_score, lambda x: x[0]):
-        top_user_scores.append((k, list(v)))
-    # TODO: FIX groupby
+    # GroupBy analog
+    d = defaultdict(list)
+    for tag, num in top_user_score:
+        d[tag].append(num)
+    top_user_scores = list(d.items())
     top_user_average = [(x[0], np.mean(x[1])) for x in top_user_scores]
-    top_average = [x[1] for x in top_user_average]
     top_similarities = [x[1] for x in top]
     k = 1 / np.sum(np.absolute(top_similarities))
     this_items = list(map(lambda x: x[0], this_item_score))
-    unrated_items = list(filter(lambda x: x in this_items, item_ids))
+    unrated_items = list(filter(lambda x: x in this_items, [x.id for x in item_ids]))
     ratings = []
     for item in unrated_items:
-        top_ten_ratings_i = np.array([x[1] for x in top_user_item_score if x[0][1] == item]) - top_average
-        rating = (item, this_average_item_score + k * np.dot(top_similarities, top_ten_ratings_i))
+        current_item_user_score = [(x[0][0], x[1]) for x in top_user_item_score if x[0][1] == item]
+        current_scores = np.array([x[1] for x in current_item_user_score])
+        current_top_users = [x[0] for x in current_item_user_score]
+        new_top_user_average = list(filter(lambda x: x[0] in current_top_users, top_user_average))
+        new_top_average = np.array([x[1] for x in new_top_user_average])
+        top_ten_ratings_i = current_scores - new_top_average
+        top_user_sim = list(filter(lambda x: x[0].id in current_top_users, top))
+        top_sim = [x[1] for x in top_user_sim]
+        rating = (item, this_average_item_score + k * np.dot(top_sim, top_ten_ratings_i))
         ratings.append(rating)
     ratings = sorted(ratings, key=lambda x: x[1], reverse=True)
     recommendation = ratings[:10]

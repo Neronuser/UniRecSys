@@ -36,6 +36,14 @@ class Score(db.Document):
     score = db.IntField(min_value=1, max_value=5)
     user = db.ReferenceField(User)
     item = db.ReferenceField(Item)
+    meta = {
+        'indexes': [
+            {
+                'fields': ['user', 'item'],
+                'unique': True
+            }
+        ]
+    }
 
 
 class ScoreResource(Resource):

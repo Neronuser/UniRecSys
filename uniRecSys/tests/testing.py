@@ -15,14 +15,17 @@ class UniRecSysTestCase(unittest.TestCase):
         self.app.session_interface = MongoEngineSessionInterface(db)
         self.db = db
         self.c = self.app.test_client()
-        for i in range(50):
+        for i in range(100):
             User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
             Item(name=str(i), description="bla").save()
         users = User.objects().all()
         self.items = Item.objects().all()
-        for i in range(300):
-            Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 50)].id,
-                  item=self.items[np.random.randint(0, 50)].id).save()
+        for i in range(5000):
+            try:
+                Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 100)].id,
+                    item=self.items[np.random.randint(0, 100)].id).save()
+            except:
+                continue
 
     def tearDown(self):
         self.db.connection.drop_database("testing")
@@ -44,16 +47,14 @@ class UniRecSysTestCase(unittest.TestCase):
             "email": "12341@dot.net",
             "password": "toor"
         }, headers=headers)
-        # print(resp.data)
-        # print(json.loads(resp.data))
 
         for i in range(30):
-            Score(score=np.random.randint(1, 6), user=json.loads(user1.data)['id'],
-                  item=self.items[np.random.randint(0, 50)].id).save()
-
+            try:
+                Score(score=np.random.randint(1, 6), user=json.loads(user1.data)['id'],
+                    item=self.items[np.random.randint(0, 50)].id).save()
+            except:
+                continue
         resp = self.c.get('/recommend')
-
-
 
     def test_hello_world(self):
         resp = self.c.get('/')
