@@ -1,6 +1,6 @@
 from uniRecSys.app import app, api, bcrypt
 from uniRecSys.app.models import *
-from flask import request, session, flash, redirect, url_for, render_template
+from flask import request, session, flash, redirect, url_for, render_template, jsonify
 from flask.ext.mongorest.views import ResourceView
 import numpy as np
 from collections import defaultdict
@@ -117,8 +117,11 @@ def recommend():
         ratings.append(rating)
     ratings = sorted(ratings, key=lambda x: x[1], reverse=True)
     recommendation = ratings[:10]
-    print(recommendation)
     return recommendation
 
 
+@app.route('/search/<string:name>')
+def search(name):
+    searched = Item.objects(name__icontains=name).all()
+    return searched.to_json()
 

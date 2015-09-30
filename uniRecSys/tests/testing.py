@@ -20,10 +20,10 @@ class UniRecSysTestCase(unittest.TestCase):
             Item(name=str(i), description="bla").save()
         users = User.objects().all()
         self.items = Item.objects().all()
-        for i in range(5000):
+        for i in range(500):
             try:
                 Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 100)].id,
-                    item=self.items[np.random.randint(0, 100)].id).save()
+                      item=self.items[np.random.randint(0, 100)].id).save()
             except:
                 continue
 
@@ -56,10 +56,13 @@ class UniRecSysTestCase(unittest.TestCase):
                 continue
         resp = self.c.get('/recommend')
 
-    def test_hello_world(self):
-        resp = self.c.get('/')
+    def test_search(self):
+        Item(name="Valid string", description="bla").save()
+        Item(name="String of hope", description="bla").save()
+        Item(name="No str here", description="bla").save()
+        resp = self.c.get('/search/string')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data.decode('utf-8'), "Hello World!")
+        self.assertTrue(len(json.loads(resp.data)) == 2)
 
 
 if __name__ == '__main__':
