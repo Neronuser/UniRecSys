@@ -18,7 +18,7 @@ class ItemView(ResourceView):
 @api.register(name='users', url='/users/')
 class UserView(ResourceView):
     resource = UserResource
-    methods = [methods.Create, methods.Fetch, methods.List]
+    methods = [methods.Create]
 
 
 @api.register(name='scores', url='/scores/')
@@ -117,7 +117,8 @@ def recommend():
         ratings.append(rating)
     ratings = sorted(ratings, key=lambda x: x[1], reverse=True)
     recommendation = ratings[:10]
-    return recommendation
+    recommend_items = Item.objects(id__in=[rec[0] for rec in recommendation]).all()
+    return recommend_items.to_json()
 
 
 @app.route('/search/<string:name>')
