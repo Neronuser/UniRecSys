@@ -11,29 +11,37 @@ from flask.ext.mongorest import methods
 
 @api.register(name='items', url='/items/')
 class ItemView(ResourceView):
+    """
+    Item view, REST API for Create, Update, Fetch and List
+    """
     resource = ItemResource
     methods = [methods.Create, methods.Update, methods.Fetch, methods.List]
 
 
 @api.register(name='users', url='/users/')
 class UserView(ResourceView):
+    """
+    User view, REST API for Create, Update, Fetch and List
+    """
     resource = UserResource
     methods = [methods.Create]
 
 
 @api.register(name='scores', url='/scores/')
 class ScoreView(ResourceView):
+    """
+    Score view, REST API for Create, Update, Fetch and List
+    """
     resource = ScoreResource
     methods = [methods.Create, methods.Update, methods.Fetch, methods.List]
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Login method for tracking user behavior and authentification
+
+    :return: Flask.Response
+    """
     error = None
     if request.method == 'POST':
         try:
@@ -44,23 +52,30 @@ def login():
                 session['logged_in'] = True
                 session['this_user'] = {'email': this_user.email}
                 flash('You were logged in')
-                # TODO: right redirect and test
-                return redirect(url_for('index'))
+                return jsonify({"status": [{"error": error}, {"result": "logged in"}]})
         except:
             error = "User does not exist"
             flash('User does not exist')
-    return render_template('login.html', error=error)
+    return jsonify({"status": [{"error": error}, {"result": "error"}]})
 
 
 @app.route('/logout')
 def logout():
+    """Ending user session
+
+    :return: Flask.Response
+    """
     session.pop('logged_in', None)
     flash('You were logged out')
-    return redirect(url_for('index'))
+    return jsonify({"status": "logged out"})
 
 
 @app.route('/recommend')
 def recommend():
+    """User-based collaborative filtering recommendation engine algorithm
+
+    :return: Flask.Response -- JSON Item objects
+    """
     this_user = User.objects.get(email=session["this_user"]['email'])
     user_ids = User.objects().only('id').all()
     item_ids = Item.objects().only('id').all()
@@ -123,6 +138,11 @@ def recommend():
 
 @app.route('/search/<string:name>')
 def search(name):
+    """Searching items by name
+
+    :param name: String query string(key)
+    :return: Flask.Response -- JSON Item objects
+    """
     searched = Item.objects(name__icontains=name).all()
     return searched.to_json()
 
