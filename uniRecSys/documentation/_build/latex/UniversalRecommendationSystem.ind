@@ -1,0 +1,87 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item app (module), \hyperpage{8}
+  \item app.models (module), \hyperpage{5}
+  \item app.views (module), \hyperpage{7}
+
+  \indexspace
+  \bigletter C
+  \item create\_object() (app.models.UserResource method), \hyperpage{7}
+
+  \indexspace
+  \bigletter D
+  \item description (app.models.Item attribute), \hyperpage{5}
+  \item document (app.models.ItemResource attribute), \hyperpage{5}
+  \item document (app.models.ScoreResource attribute), \hyperpage{7}
+  \item document (app.models.UserResource attribute), \hyperpage{7}
+
+  \indexspace
+  \bigletter E
+  \item email (app.models.User attribute), \hyperpage{7}
+
+  \indexspace
+  \bigletter I
+  \item id (app.models.Item attribute), \hyperpage{5}
+  \item id (app.models.Score attribute), \hyperpage{5}
+  \item id (app.models.User attribute), \hyperpage{7}
+  \item item (app.models.Score attribute), \hyperpage{5}
+  \item Item (class in app.models), \hyperpage{5}
+  \item Item.DoesNotExist, \hyperpage{5}
+  \item Item.MultipleObjectsReturned, \hyperpage{5}
+  \item ItemResource (class in app.models), \hyperpage{5}
+  \item ItemView (class in app.views), \hyperpage{7}
+
+  \indexspace
+  \bigletter L
+  \item login() (in module app.views), \hyperpage{8}
+  \item logout() (in module app.views), \hyperpage{8}
+
+  \indexspace
+  \bigletter M
+  \item methods (app.views.ItemView attribute), \hyperpage{8}
+  \item methods (app.views.ScoreView attribute), \hyperpage{8}
+  \item methods (app.views.UserView attribute), \hyperpage{8}
+
+  \indexspace
+  \bigletter N
+  \item name (app.models.Item attribute), \hyperpage{5}
+
+  \indexspace
+  \bigletter O
+  \item objects (app.models.Item attribute), \hyperpage{5}
+  \item objects (app.models.Score attribute), \hyperpage{6}
+  \item objects (app.models.User attribute), \hyperpage{7}
+
+  \indexspace
+  \bigletter P
+  \item password (app.models.User attribute), \hyperpage{7}
+
+  \indexspace
+  \bigletter R
+  \item recommend() (in module app.views), \hyperpage{8}
+  \item resource (app.views.ItemView attribute), \hyperpage{8}
+  \item resource (app.views.ScoreView attribute), \hyperpage{8}
+  \item resource (app.views.UserView attribute), \hyperpage{8}
+
+  \indexspace
+  \bigletter S
+  \item score (app.models.Score attribute), \hyperpage{6}
+  \item Score (class in app.models), \hyperpage{5}
+  \item Score.DoesNotExist, \hyperpage{5}
+  \item Score.MultipleObjectsReturned, \hyperpage{5}
+  \item ScoreResource (class in app.models), \hyperpage{7}
+  \item ScoreView (class in app.views), \hyperpage{8}
+  \item search() (in module app.views), \hyperpage{8}
+
+  \indexspace
+  \bigletter U
+  \item user (app.models.Score attribute), \hyperpage{6}
+  \item User (class in app.models), \hyperpage{7}
+  \item User.DoesNotExist, \hyperpage{7}
+  \item User.MultipleObjectsReturned, \hyperpage{7}
+  \item UserResource (class in app.models), \hyperpage{7}
+  \item UserView (class in app.views), \hyperpage{8}
+
+\end{theindex}

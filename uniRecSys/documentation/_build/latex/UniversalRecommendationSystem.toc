@@ -1,0 +1,9 @@
+\select@language {english}
+\contentsline {part}{I\hspace {1em}app}{3}{part.1}
+\contentsline {chapter}{\numberline {1}app package}{5}{chapter.1}
+\contentsline {section}{\numberline {1.1}Submodules}{5}{section.1.1}
+\contentsline {section}{\numberline {1.2}app.models module}{5}{section.1.2}
+\contentsline {section}{\numberline {1.3}app.views module}{7}{section.1.3}
+\contentsline {section}{\numberline {1.4}Module contents}{8}{section.1.4}
+\contentsline {part}{II\hspace {1em}Indices and tables}{9}{part.2}
+\contentsline {chapter}{Index}{13}{section*.45}

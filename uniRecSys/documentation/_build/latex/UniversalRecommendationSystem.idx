@@ -1,0 +1,45 @@
+\indexentry{app.models (module)|hyperpage}{5}
+\indexentry{Item (class in app.models)|hyperpage}{5}
+\indexentry{Item.DoesNotExist|hyperpage}{5}
+\indexentry{Item.MultipleObjectsReturned|hyperpage}{5}
+\indexentry{description (app.models.Item attribute)|hyperpage}{5}
+\indexentry{id (app.models.Item attribute)|hyperpage}{5}
+\indexentry{name (app.models.Item attribute)|hyperpage}{5}
+\indexentry{objects (app.models.Item attribute)|hyperpage}{5}
+\indexentry{ItemResource (class in app.models)|hyperpage}{5}
+\indexentry{document (app.models.ItemResource attribute)|hyperpage}{5}
+\indexentry{Score (class in app.models)|hyperpage}{5}
+\indexentry{Score.DoesNotExist|hyperpage}{5}
+\indexentry{Score.MultipleObjectsReturned|hyperpage}{5}
+\indexentry{id (app.models.Score attribute)|hyperpage}{5}
+\indexentry{item (app.models.Score attribute)|hyperpage}{5}
+\indexentry{objects (app.models.Score attribute)|hyperpage}{6}
+\indexentry{score (app.models.Score attribute)|hyperpage}{6}
+\indexentry{user (app.models.Score attribute)|hyperpage}{6}
+\indexentry{ScoreResource (class in app.models)|hyperpage}{7}
+\indexentry{document (app.models.ScoreResource attribute)|hyperpage}{7}
+\indexentry{User (class in app.models)|hyperpage}{7}
+\indexentry{User.DoesNotExist|hyperpage}{7}
+\indexentry{User.MultipleObjectsReturned|hyperpage}{7}
+\indexentry{email (app.models.User attribute)|hyperpage}{7}
+\indexentry{id (app.models.User attribute)|hyperpage}{7}
+\indexentry{objects (app.models.User attribute)|hyperpage}{7}
+\indexentry{password (app.models.User attribute)|hyperpage}{7}
+\indexentry{UserResource (class in app.models)|hyperpage}{7}
+\indexentry{create\_object() (app.models.UserResource method)|hyperpage}{7}
+\indexentry{document (app.models.UserResource attribute)|hyperpage}{7}
+\indexentry{app.views (module)|hyperpage}{7}
+\indexentry{ItemView (class in app.views)|hyperpage}{7}
+\indexentry{methods (app.views.ItemView attribute)|hyperpage}{8}
+\indexentry{resource (app.views.ItemView attribute)|hyperpage}{8}
+\indexentry{ScoreView (class in app.views)|hyperpage}{8}
+\indexentry{methods (app.views.ScoreView attribute)|hyperpage}{8}
+\indexentry{resource (app.views.ScoreView attribute)|hyperpage}{8}
+\indexentry{UserView (class in app.views)|hyperpage}{8}
+\indexentry{methods (app.views.UserView attribute)|hyperpage}{8}
+\indexentry{resource (app.views.UserView attribute)|hyperpage}{8}
+\indexentry{login() (in module app.views)|hyperpage}{8}
+\indexentry{logout() (in module app.views)|hyperpage}{8}
+\indexentry{recommend() (in module app.views)|hyperpage}{8}
+\indexentry{search() (in module app.views)|hyperpage}{8}
+\indexentry{app (module)|hyperpage}{8}
