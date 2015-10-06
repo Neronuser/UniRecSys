@@ -38,8 +38,8 @@ class ScoreView(ResourceView):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """Login method for tracking user behavior and authentification
-
+    """
+    Login method for tracking user behavior and authentification
     :return: Flask.Response
     """
     error = None
@@ -61,8 +61,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Ending user session
-
+    """
+    Ending user session
     :return: Flask.Response
     """
     session.pop('logged_in', None)
@@ -72,8 +72,8 @@ def logout():
 
 @app.route('/recommend')
 def recommend():
-    """User-based collaborative filtering recommendation engine algorithm
-
+    """
+    User-based collaborative filtering recommendation engine algorithm
     :return: Flask.Response -- JSON Item objects
     """
     this_user = User.objects.get(email=session["this_user"]['email'])
@@ -138,8 +138,8 @@ def recommend():
 
 @app.route('/search/<string:name>')
 def search(name):
-    """Searching items by name
-
+    """
+    Searching items by name
     :param name: String query string(key)
     :return: Flask.Response -- JSON Item objects
     """

@@ -7,7 +7,13 @@ from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 
 
 class UniRecSysTestCase(unittest.TestCase):
+    """
+    A set of unittests
+    """
     def setUp(self):
+        """
+        Sets up a testing database and connects to it
+        """
         app2.config['MONGODB_DB'] = "testing"
         app2.config['TESTING'] = True
         db = MongoEngine(app2)
@@ -17,9 +23,15 @@ class UniRecSysTestCase(unittest.TestCase):
         self.c = self.app.test_client()
 
     def tearDown(self):
+        """
+        Drops the database after testing is finished
+        """
         self.db.connection.drop_database("testing")
 
     def test_recommendations(self):
+        """
+        Test routine for user creation, login and getting recommendations
+        """
         for i in range(100):
             User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
             Item(name=str(i), description="bla").save()
@@ -57,6 +69,9 @@ class UniRecSysTestCase(unittest.TestCase):
         self.assertTrue(len(json.loads(resp.data)) > 0)
 
     def test_search(self):
+        """
+        Test routine for search item by name
+        """
         Item(name="Valid string", description="bla").save()
         Item(name="String of hope", description="bla").save()
         Item(name="No str here", description="bla").save()
@@ -64,7 +79,23 @@ class UniRecSysTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(len(json.loads(resp.data)) == 2)
 
+    def test_create_score(self):
+        """
+        Test routine for score creation
+        """
+        item = Item(name="Valid string", description="bla").save()
+        user = User(email="bb@bb.com", password="kooo").save()
+        score = self.c.post('/scores/', data=json.dumps({
+            "score": 2,
+            "user": str(user.id),
+            "item": str(item.id)
+        }))
+        self.assertTrue(json.loads(score.data)["score"] == 2)
+
     def test_update_score(self):
+        """
+        Test routine for updating the score value by a given user for a given item
+        """
         item = Item(name="Valid string", description="bla").save()
         user = User(email="bb@bb.com", password="kooo").save()
         Score(score=3, user=user.id, item=item.id).save()
@@ -77,13 +108,29 @@ class UniRecSysTestCase(unittest.TestCase):
         }))
         self.assertTrue(json.loads(new_score.data)["score"] == 4)
 
-    def test_item(self):
+    def test_create_item(self):
+        """
+        Test routine for item creation
+        """
         item1 = self.c.post('/items/', data=json.dumps({
             "name": "Barrett M82",
             "description": "50. caliber semi-automatic sniper rifle"
         }))
         self.assertEqual(item1.status_code, 200)
         self.assertEqual(json.loads(item1.data)["name"], "Barrett M82")
+
+    def test_update_item(self):
+        """
+        Test routine for updating the item value(name and description)
+        """
+        item = Item(name="Barrett M82", description="50. caliber semi-automatic sniper rifle").save()
+        new = ("Barett M107", "Barett M82 improved")
+        new_item = self.c.put('/items/' + str(item.id) + '/', data=json.dumps({
+            "name": new[0],
+            "description": new[1]
+        }))
+        self.assertTrue(json.loads(new_item.data)["name"] == new[0])
+        self.assertTrue(json.loads(new_item.data)["description"] == new[1])
 
 
 if __name__ == '__main__':
