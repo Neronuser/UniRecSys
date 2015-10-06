@@ -1,7 +1,10 @@
 Flask
 Flask-pymongo
-Flask-mogorest
+Flask-mongorest
 Flask-mongoengine
 Flask-bcrypt
+Flask-views
 numpy
 scipy
+python-dateutil
+mimerender

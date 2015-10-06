@@ -1,6 +1,6 @@
 from uniRecSys.app import app, api, bcrypt
 from uniRecSys.app.models import *
-from flask import request, session, flash, redirect, url_for, render_template, jsonify
+from flask import request, session, flash, jsonify
 from flask.ext.mongorest.views import ResourceView
 import numpy as np
 from collections import defaultdict
