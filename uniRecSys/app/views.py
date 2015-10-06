@@ -40,6 +40,7 @@ class ScoreView(ResourceView):
 def login():
     """
     Login method for tracking user behavior and authentification
+
     :return: Flask.Response
     """
     error = None
@@ -63,6 +64,7 @@ def login():
 def logout():
     """
     Ending user session
+
     :return: Flask.Response
     """
     session.pop('logged_in', None)
@@ -74,6 +76,7 @@ def logout():
 def recommend():
     """
     User-based collaborative filtering recommendation engine algorithm
+
     :return: Flask.Response -- JSON Item objects
     """
     this_user = User.objects.get(email=session["this_user"]['email'])
@@ -140,6 +143,7 @@ def recommend():
 def search(name):
     """
     Searching items by name
+
     :param name: String query string(key)
     :return: Flask.Response -- JSON Item objects
     """
