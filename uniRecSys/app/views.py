@@ -51,7 +51,7 @@ def login():
             else:
                 session['logged_in'] = True
                 session['this_user'] = {'email': this_user.email}
-                flash('You were logged in')
+                # flash('You were logged in')
                 return jsonify({"status": [{"error": error}, {"result": "logged in"}]})
         except:
             error = "User does not exist"
@@ -66,7 +66,7 @@ def logout():
     :return: Flask.Response
     """
     session.pop('logged_in', None)
-    flash('You were logged out')
+    # flash('You were logged out')
     return jsonify({"status": "logged out"})
 
 

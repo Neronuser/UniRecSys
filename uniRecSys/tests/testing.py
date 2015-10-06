@@ -30,7 +30,7 @@ class UniRecSysTestCase(unittest.TestCase):
 
     def test_recommendations(self):
         """
-        Test routine for user creation, login and getting recommendations
+        Test routine for user creation, login, logout and getting recommendations
         """
         for i in range(100):
             User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
@@ -56,6 +56,7 @@ class UniRecSysTestCase(unittest.TestCase):
             "email": "12341@dot.net",
             "password": "toor"
         }, headers=headers)
+        self.assertEqual(json.loads(login.data)["status"][1]["result"], "logged in")
 
         for i in range(30):
             try:
@@ -68,6 +69,10 @@ class UniRecSysTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(len(json.loads(resp.data)) > 0)
 
+        logout = self.c.get('/logout')
+        self.assertEqual(json.loads(logout.data)["status"], "logged out")
+
+
     def test_search(self):
         """
         Test routine for search item by name
@@ -77,7 +82,7 @@ class UniRecSysTestCase(unittest.TestCase):
         Item(name="No str here", description="bla").save()
         resp = self.c.get('/search/string')
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(len(json.loads(resp.data)) == 2)
+        self.assertEqual(len(json.loads(resp.data)), 2)
 
     def test_create_score(self):
         """
@@ -90,7 +95,7 @@ class UniRecSysTestCase(unittest.TestCase):
             "user": str(user.id),
             "item": str(item.id)
         }))
-        self.assertTrue(json.loads(score.data)["score"] == 2)
+        self.assertEqual(json.loads(score.data)["score"], 2)
 
     def test_update_score(self):
         """
@@ -106,7 +111,26 @@ class UniRecSysTestCase(unittest.TestCase):
             "user": str(current_score.user.id),
             "item": str(current_score.item.id)
         }))
-        self.assertTrue(json.loads(new_score.data)["score"] == 4)
+        self.assertEqual(json.loads(new_score.data)["score"], 4)
+
+    def test_list_scores(self):
+        """
+        Test routine for getting a list of all scores
+        """
+        for i in range(10):
+            User(email=str(i) + "@dot.net", password=bcrypt.generate_password_hash("toor")).save()
+            Item(name=str(i), description="bla").save()
+        users = User.objects().all()
+        self.items = Item.objects().all()
+        for i in range(50):
+            try:
+                Score(score=np.random.randint(1, 6), user=users[np.random.randint(0, 10)].id,
+                      item=self.items[np.random.randint(0, 10)].id).save()
+            except:
+                continue
+        resp = self.c.get('/scores/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(json.loads(resp.data)['data']) > 0)
 
     def test_create_item(self):
         """
@@ -129,9 +153,18 @@ class UniRecSysTestCase(unittest.TestCase):
             "name": new[0],
             "description": new[1]
         }))
-        self.assertTrue(json.loads(new_item.data)["name"] == new[0])
-        self.assertTrue(json.loads(new_item.data)["description"] == new[1])
+        self.assertEqual(json.loads(new_item.data)["name"], new[0])
+        self.assertEqual(json.loads(new_item.data)["description"], new[1])
 
+    def test_list_items(self):
+        """
+        Test routine for getting a list of all items
+        """
+        for i in range(0, 10):
+            Item(name="Valid string" + str(i), description="bla").save()
+        resp = self.c.get('/items/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(json.loads(resp.data)['data']), 10)
 
 if __name__ == '__main__':
     unittest.main()
